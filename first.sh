@@ -35,7 +35,19 @@ echo "export LD_LIBRARY_PATH=/usr/lib/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -P ~/Downloads
 bash ~/Downloads/Miniconda3-latest-Linux-x86_64.sh
 
-# VSCodium
+# VSCodium: no telemetry but some propietary extensions are not available on this (e.g. Remote - Containers)
+# So instead adding VsCode through tar.gz (also the flatpak is containerized, so no host sdk access)
 # wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg | gpg --dearmor | sudo dd of=/etc/apt/trusted.gpg.d/vscodium.gpg
 # echo 'deb https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs/ vscodium main' | sudo tee --append /etc/apt/sources.list.d/vscodium.list
 # sudo apt update && sudo apt install codium
+
+# VSCode
+wget "https://code.visualstudio.com/sha/download?build=stable&os=linux-x64" -P ~/Downloads/ -O code-linux-x64.tar.gz
+gunzip code-linux-x64.tar.gz
+tar -xvf code-linux-x64.tar -C ~/apps/
+
+# Edit the following file to set the correction user-home path, then move the file.
+# mv vscode.desktop ~/.local/share/applications/
+
+# Latex
+sudo apt install texlive-full
