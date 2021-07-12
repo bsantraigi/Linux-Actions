@@ -1,0 +1,11 @@
+[Unit]
+Description="x11vnc"
+Requires=display-manager.service
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/bin/x11vnc -xauth /run/user/1000/gdm/Xauthority -display :1 -loop -forever -shared -ultrafilexfer -bg -o /var/log/x11vnc.log -rfbauth /home/bytestorm/.vnc/passwd -rfbport 5900
+ExecStop=/usr/bin/killall x11vnc
+
+[Install]
+WantedBy=multi-user.target
