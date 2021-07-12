@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Visual Studio Code
+Icon=/home/bytestorm/apps/VSCode-linux-x64/resources/app/resources/linux/code.png
+Exec="/home/bytestorm/apps/VSCode-linux-x64/bin/code" --unity-launch %F
+Comment=Code Editing. Redefined.
+Categories=Utility;TextEditor;Development;IDE;
+Terminal=false
+StartupWMClass=Code
