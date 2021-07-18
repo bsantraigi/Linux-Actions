@@ -10,13 +10,13 @@ A repo for one shot setup of linux system. (Laptop with NVIDIA gpu)
 
 Docker Compose of following
 
-> OpenVPN-Transmission
-> Sonarr
-> Radarr
-> Lidarr
-> Jackett
-> Jellyfin
-> Ampache/Airsonic
-> Droppy
-> Plex 
-> Nginx
+- OpenVPN-Transmission
+- Sonarr
+- Radarr
+- Lidarr
+- Jackett
+- Jellyfin
+- Ampache/Airsonic
+- Droppy
+- Plex 
+- Nginx
