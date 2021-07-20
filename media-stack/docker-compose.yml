@@ -1,0 +1,115 @@
+version: '2.1'
+
+services:
+ transmission-openvpn:
+    container_name: transmission-openvpn
+    volumes:
+        # - /home/bytestorm/Downloads:/media/downloads
+        - /home/bytestorm/Downloads/underworld:/data
+        # - /etc/localtime:/etc/localtime:ro
+    environment:
+        - PUID=1000
+        - PGID=1000
+        - CREATE_TUN_DEVICE=true
+        - OPENVPN_PROVIDER=surfshark
+        - OPENVPN_CONFIG=no-osl_udp
+        - OPENVPN_USERNAME=xxxxxxxxxxxxxxxx
+        - OPENVPN_PASSWORD=xxxxxxxxxxxxxxxx
+        - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60
+        - WEBPROXY_ENABLED=false
+        - LOCAL_NETWORK=192.168.0.0/24
+        - TRANSMISSION_SCRAPE_PAUSED_TORRENTS_ENABLED=false
+        - TRANSMISSION_WEB_UI=transmission-web-control
+        - DNS=8.8.8.8,8.8.4.4
+        - OVERRIDE_DNS_1=8.8.8.8
+        - OVERRIDE_DNS_2=8.8.4.4
+    dns: 
+        - 8.8.8.8
+        - 8.8.4.4
+    cap_add:
+        - NET_ADMIN
+    logging:
+        driver: json-file
+        options:
+            max-size: 10m
+    ports:
+        - 9091:9091
+        - 9117:9117
+        - 7878:7878
+        - 8989:8989
+        - 8686:8686
+    restart: unless-stopped
+    image: haugene/transmission-openvpn
+ 
+ jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    network_mode: "service:transmission-openvpn"
+    depends_on: 
+        - "transmission-openvpn"
+    environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=America/New_York
+        - AUTO_UPDATE=true #optional
+        - RUN_OPTS= #optional
+    volumes:
+        - /home/bytestorm/.media-stack/jackett:/config
+        - /home/bytestorm/Downloads/underworld:/downloads
+        - /home/bytestorm/Downloads/underworld:/data
+        #Jackett only needs config
+    restart: unless-stopped
+ 
+ radarr:
+    image: linuxserver/radarr
+    network_mode: "service:transmission-openvpn"
+    container_name: radarr
+    depends_on: 
+        - "transmission-openvpn"
+    environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=America/New_York
+        - UMASK_SET=022 #optional
+    volumes:
+        - /home/bytestorm/.media-stack/radarr:/config
+        - /home/bytestorm/Downloads/movies:/movies
+        - /home/bytestorm/Downloads/underworld:/downloads
+        - /home/bytestorm/Downloads/underworld:/data
+    restart: unless-stopped
+ 
+ sonarr:
+    image: linuxserver/sonarr
+    network_mode: "service:transmission-openvpn"
+    container_name: sonarr
+    depends_on: 
+        - "transmission-openvpn"
+    environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=America/New_York
+        - UMASK_SET=022 #optional
+    volumes:
+        - /home/bytestorm/.media-stack/sonarr:/config
+        - /home/bytestorm/Downloads/tv:/tv
+        - /home/bytestorm/Downloads/underworld:/downloads
+        - /home/bytestorm/Downloads/underworld:/data
+    restart: unless-stopped
+ 
+ lidarr:
+    image: linuxserver/lidarr
+    network_mode: "service:transmission-openvpn"
+    container_name: lidarr
+    depends_on: 
+        - "transmission-openvpn"
+    environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=America/New_York
+        - UMASK_SET=022 #optional
+    volumes:
+        - /home/bytestorm/.media-stack/lidarr:/config
+        - /home/bytestorm/Downloads/music:/music
+        - /home/bytestorm/Downloads/underworld:/downloads
+        - /home/bytestorm/Downloads/underworld:/data
+    restart: unless-stopped
