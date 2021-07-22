@@ -5,7 +5,8 @@ services:
     container_name: transmission-openvpn
     volumes:
         # - /home/bytestorm/Downloads:/media/downloads
-        - /home/bytestorm/Downloads/underworld:/data
+        - /ark/underworld:/data
+        - /ark:/ark
         # - /etc/localtime:/etc/localtime:ro
     environment:
         - PUID=1000
@@ -15,7 +16,7 @@ services:
         - OPENVPN_CONFIG=no-osl_udp
         - OPENVPN_USERNAME=xxxxxxxxxxxxxxxx
         - OPENVPN_PASSWORD=xxxxxxxxxxxxxxxx
-        - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60
+        - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60 --dhcp-option DNS 8.8.8.8 --dhcp-option DNS 8.8.4.4
         - WEBPROXY_ENABLED=false
         - LOCAL_NETWORK=192.168.0.0/24
         - TRANSMISSION_SCRAPE_PAUSED_TORRENTS_ENABLED=false
@@ -55,8 +56,6 @@ services:
         - RUN_OPTS= #optional
     volumes:
         - /home/bytestorm/.media-stack/jackett:/config
-        - /home/bytestorm/Downloads/underworld:/downloads
-        - /home/bytestorm/Downloads/underworld:/data
         #Jackett only needs config
     restart: unless-stopped
  
@@ -73,9 +72,7 @@ services:
         - UMASK_SET=022 #optional
     volumes:
         - /home/bytestorm/.media-stack/radarr:/config
-        - /home/bytestorm/Downloads/movies:/movies
-        - /home/bytestorm/Downloads/underworld:/downloads
-        - /home/bytestorm/Downloads/underworld:/data
+        - /ark:/ark
     restart: unless-stopped
  
  sonarr:
@@ -91,9 +88,7 @@ services:
         - UMASK_SET=022 #optional
     volumes:
         - /home/bytestorm/.media-stack/sonarr:/config
-        - /home/bytestorm/Downloads/tv:/tv
-        - /home/bytestorm/Downloads/underworld:/downloads
-        - /home/bytestorm/Downloads/underworld:/data
+        - /ark:/ark
     restart: unless-stopped
  
  lidarr:
@@ -109,7 +104,5 @@ services:
         - UMASK_SET=022 #optional
     volumes:
         - /home/bytestorm/.media-stack/lidarr:/config
-        - /home/bytestorm/Downloads/music:/music
-        - /home/bytestorm/Downloads/underworld:/downloads
-        - /home/bytestorm/Downloads/underworld:/data
+        - /ark:/ark
     restart: unless-stopped
