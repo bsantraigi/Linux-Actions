@@ -21,6 +21,9 @@ services:
         - LOCAL_NETWORK=192.168.0.0/24
         - TRANSMISSION_SCRAPE_PAUSED_TORRENTS_ENABLED=false
         - TRANSMISSION_WEB_UI=transmission-web-control
+        - TRANSMISSION_HOME=/ark/underworld/transmission-home
+        - TRANSMISSION_DOWNLOAD_DIR=/ark/underworld/completed
+        - TRANSMISSION_INCOMPLETE_DIR=/ark/underworld/incomplete
         - DNS=8.8.8.8,8.8.4.4
         - OVERRIDE_DNS_1=8.8.8.8
         - OVERRIDE_DNS_2=8.8.4.4
