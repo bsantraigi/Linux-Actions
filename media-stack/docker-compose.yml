@@ -1,12 +1,12 @@
-version: '2.1'
+version: '3'
 
 services:
  transmission-openvpn:
     container_name: transmission-openvpn
     volumes:
         # - /home/bytestorm/Downloads:/media/downloads
-        - /ark/underworld:/data
-        - /ark:/ark
+        - /acheron/AppData/transmission:/data
+        - /acheron/TheArkVault:/ark
         # - /etc/localtime:/etc/localtime:ro
     environment:
         - PUID=1000
@@ -21,7 +21,7 @@ services:
         - LOCAL_NETWORK=192.168.0.0/24
         - TRANSMISSION_SCRAPE_PAUSED_TORRENTS_ENABLED=false
         - TRANSMISSION_WEB_UI=transmission-web-control
-        - TRANSMISSION_HOME=/ark/underworld/transmission-home
+        - TRANSMISSION_HOME=/data/transmission-home
         - TRANSMISSION_DOWNLOAD_DIR=/ark/underworld/completed
         - TRANSMISSION_INCOMPLETE_DIR=/ark/underworld/incomplete
         - DNS=8.8.8.8,8.8.4.4
@@ -42,6 +42,7 @@ services:
         - 7878:7878
         - 8989:8989
         - 8686:8686
+        - 8096:8096
     restart: unless-stopped
     image: haugene/transmission-openvpn
  
@@ -58,7 +59,7 @@ services:
         - AUTO_UPDATE=true #optional
         - RUN_OPTS= #optional
     volumes:
-        - /home/bytestorm/.media-stack/jackett:/config
+        - /acheron/AppData/jackett:/config
         #Jackett only needs config
     restart: unless-stopped
  
@@ -74,8 +75,8 @@ services:
         - TZ=America/New_York
         - UMASK_SET=022 #optional
     volumes:
-        - /home/bytestorm/.media-stack/radarr:/config
-        - /ark:/ark
+        - /acheron/AppData/radarr:/config
+        - /acheron/TheArkVault:/ark
     restart: unless-stopped
  
  sonarr:
@@ -90,8 +91,8 @@ services:
         - TZ=America/New_York
         - UMASK_SET=022 #optional
     volumes:
-        - /home/bytestorm/.media-stack/sonarr:/config
-        - /ark:/ark
+        - /acheron/AppData/sonarr:/config
+        - /acheron/TheArkVault:/ark
     restart: unless-stopped
  
  lidarr:
@@ -106,6 +107,24 @@ services:
         - TZ=America/New_York
         - UMASK_SET=022 #optional
     volumes:
-        - /home/bytestorm/.media-stack/lidarr:/config
-        - /ark:/ark
+        - /acheron/AppData/lidarr:/config
+        - /acheron/TheArkVault:/ark
     restart: unless-stopped
+
+ jellyfin:
+    image: linuxserver/jellyfin
+    container_name: jellyfin
+    network_mode: "service:transmission-openvpn"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - JELLYFIN_PublishedServerUrl=192.168.0.15/jellyfin #optional
+    volumes:
+      - /acheron/AppData/jellyfin:/config
+      - /acheron/TheArkVault:/ark
+    devices:
+      - /dev/dri:/dev/dri #optional
+    restart: unless-stopped
+    depends_on: 
+        - "transmission-openvpn"
