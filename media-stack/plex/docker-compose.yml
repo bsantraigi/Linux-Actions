@@ -1,0 +1,16 @@
+version: "2.1"
+services:
+  plex:
+    image: ghcr.io/linuxserver/plex
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VERSION=docker
+    volumes:
+      - /acheron/AppData/plex:/config
+      - /acheron/TheArkVault/tv:/tv
+      - /acheron/TheArkVault/movies:/movies
+      - /acheron/TheArkVault/music:/music
+    restart: unless-stopped

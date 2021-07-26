@@ -1,0 +1,15 @@
+version: "2.1"
+services:
+  wikijs:
+    image: ghcr.io/linuxserver/wikijs
+    container_name: wikijs
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /acheron/AppData/wikijs/config:/config
+      - /acheron/AppData/wikijs/data:/data
+    ports:
+      - 8811:3000
+    restart: unless-stopped

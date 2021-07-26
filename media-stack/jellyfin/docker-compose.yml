@@ -1,0 +1,21 @@
+version: "2.1"
+services:
+  jellyfin:
+    image: linuxserver/jellyfin
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - JELLYFIN_PublishedServerUrl=192.168.0.15:8096 #optional
+    volumes:
+      - /home/bytestorm/.jellyfin/config:/config
+      - /ark/attic:/multiverse
+    network_mode: bridge
+    devices:
+      - /dev/dri:/dev/dri #optional
+    restart: unless-stopped
+networks:
+  default:
+    external: true
+    name: nginx-proxy-manager_default
