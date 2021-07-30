@@ -1,0 +1,28 @@
+version: '2'
+services:
+  bookstack_db:
+    container_name: bookstack_db
+    image: mysql:5.7.33
+    environment:
+    - MYSQL_ROOT_PASSWORD=stackbooks
+    - MYSQL_DATABASE=bookstack
+    - MYSQL_USER=bookstack
+    - MYSQL_PASSWORD=stackbooks
+    volumes:
+    - /acheron/AppData/bookstack/db:/var/lib/mysql
+
+  bookstack:
+    container_name: bookstack
+    image: solidnerd/bookstack:0.31
+    depends_on:
+    - bookstack_db
+    environment:
+    - DB_HOST=bookstack_db:3306
+    - DB_DATABASE=bookstack
+    - DB_USERNAME=bookstack
+    - DB_PASSWORD=stackbooks
+    volumes:
+    - /acheron/AppData/bookstack/app/uploads:/var/www/bookstack/public/uploads
+    - /acheron/AppData/bookstack/app/storage-uploads:/var/www/bookstack/storage/uploads
+    ports:
+    - "8080:8080"
