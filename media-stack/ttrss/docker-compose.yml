@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:12-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${TTRSS_DB_USER}
+      - POSTGRES_PASSWORD=${TTRSS_DB_PASS}
+      - POSTGRES_DB=${TTRSS_DB_NAME}
+    volumes:
+      - /acheron/AppData/ttrss/db:/var/lib/postgresql/data
+
+  app:
+    image: cthulhoo/ttrss-fpm-pgsql-static
+    restart: unless-stopped
+    volumes:
+      - /acheron/AppData/ttrss/app:/var/www/html
+      - /acheron/AppData/ttrss/config.d:/opt/tt-rss/config.d:ro
+    depends_on:
+      - db
+
+  backups:
+    image: cthulhoo/ttrss-fpm-pgsql-static
+    restart: unless-stopped
+    volumes:
+      - /acheron/AppData/ttrss/backups:/backups
+      - /acheron/AppData/ttrss/app:/var/www/html
+    depends_on:
+      - db
+    command: /opt/tt-rss/dcron.sh -f
+
+  updater:
+    image: cthulhoo/ttrss-fpm-pgsql-static
+    restart: unless-stopped
+    volumes:
+      - /acheron/AppData/ttrss/app:/var/www/html
+      - /acheron/AppData/ttrss/config.d:/opt/tt-rss/config.d:ro
+    depends_on:
+      - app
+    command: /opt/tt-rss/updater.sh
+
+  web-nginx:
+    image: cthulhoo/ttrss-web-nginx
+    restart: unless-stopped
+    ports:
+      - ${HTTP_PORT}:80
+    volumes:
+      - /acheron/AppData/ttrss/app:/var/www/html:ro
+    depends_on:
+      - app
