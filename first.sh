@@ -51,3 +51,6 @@ tar -xvf code-linux-x64.tar -C ~/apps/
 
 # Latex
 sudo apt install texlive-full
+
+# Terminator!
+sudo apt install terminator
